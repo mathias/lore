@@ -32,7 +32,7 @@ I am Gunthur the Terrible.
 I am Conan the Weak.
 ```
 
-See [lore example](https://github.com/mathias/lore-example) for an example of Lore used as a history generator for a made-up game.
+<!-- See [lore example](https://github.com/mathias/lore-example) for an example of Lore used as a history generator for a made-up game. -->
 
 ## TODO
 
