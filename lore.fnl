@@ -36,7 +36,10 @@
         (if (= (# lista) (# listb))
             (lume.all lista (fn [item] (table-contains listb item)))))
 
-(lambda validate-actions [actions] actions)
+(lambda validate-actions [actions]
+        (each [_ action (ipairs actions)]
+              (assert action.filter-fn "Must have a filter function.")
+              ))
 (lambda validate-nouns [nouns] nouns)
 
 ;; Simplest one for now, more complex later:
@@ -67,7 +70,7 @@
                       ;; filter matches for this entity, perform action:
                       (table.insert scene.lines (action.update action entity))))))
 
-(lambda entity-smash-grammar [grammar entity]
+(lambda entity-merge-grammar [grammar entity]
         (var tmp-table {})
         (each [k v (pairs entity)]
               (tset tmp-table (string.format "#%s#" k) [v]))
@@ -75,7 +78,7 @@
 
 (lambda line-for [action entity ?key]
         (let [key (or ?key "#origin#")
-              combined-grammar (entity-smash-grammar action.grammar entity)]
+              combined-grammar (entity-merge-grammar action.grammar entity)]
           (generate-one combined-grammar)))
 
 
@@ -84,14 +87,13 @@
                  :name "weigh-in"
                  :filter [:name :mass]
                  :update (fn [action e] (tset e :mass (+ e.mass 5)) (line-for action e))
-                 :grammar {"#origin#" "#name# who weighs #mass# pounds."}
-                 }])
+                 :grammar {"#origin#" "#name# who weighs #mass# pounds."}}])
 
 (local scene {:nouns nouns :actions actions})
 
 (local world (prepare-scene scene))
 
-(for [i 1 500]
+(for [i 1 20]
      (tick world))
 
 (each [_ line (ipairs world.lines)]
