@@ -10,7 +10,7 @@
 (fn randomseed [seed]
     (math.randomseed seed))
 
-(lambda generateOne [grammar ?target]
+(lambda generate-one [grammar ?target]
   (let [target-key (or ?target "#origin#")]
     (var target-val-copy (. grammar target-key))
     (each [key val (pairs grammar)]
@@ -20,4 +20,4 @@
 
 ; Exports
 {:randomseed randomseed
- :generateOne generateOne}
+ :generate-one generate-one}
