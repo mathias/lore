@@ -1,5 +1,3 @@
-;(local fennel (require :fennel))
-;(table.insert (or package.loaders package.searchers) fennel.searcher)
 (local rex (require :rex_onig))
 (local lume (require :lume))
 
@@ -12,11 +10,6 @@
 (fn randomseed [seed]
     (math.randomseed seed))
 
-;; (local grammar {"#foo#" ["fuzz" "foop" "fizz"]
-;;                 "#bar#" ["barr" "ber" "imp"]
-;;                 "#baz#" ["dollars" "cents"]
-;;                 "#origin#" "My #foo# is a #bar# with a #baz#."})
-
 (lambda generateOne [grammar ?target]
   (let [target-key (or ?target "#origin#")]
     (var target-val-copy (. grammar target-key))
@@ -25,6 +18,6 @@
               (set target-val-copy (rex.gsub target-val-copy key (lume.randomchoice val)))))
     target-val-copy))
 
-
+; Exports
 {:randomseed randomseed
  :generateOne generateOne}
