@@ -14,14 +14,25 @@ Simple example in Fennel:
 ```
 (local lore (:require lore))
 
-(local grammar {:origin "just a simple grammar to test it out!"})
+(local grammar {"#name#" ["Hagar" "Conan" "Attila" "Gunthur" "Genghis"]
+                "#title#" ["Sad" "Terrible" "Strong" "Weak" "Feeble"]
+                "#origin#" "I am #name# the #title#."})
 
-(print (lore.generateOne grammar :origin))
+(for [i 1 5]
+  (print (lore.generate-one grammar)))
 ```
 
-Always outputs `just a simple grammar to test it out!`.
+Will output something like:
 
-See [lore example](https://github.com/mathias/lore-example) for an example of Lore used as a history generator for a made-up game.
+```
+I am Attila the Feeble.
+I am Hagar the Sad.
+I am Hagar the Strong.
+I am Gunthur the Terrible.
+I am Conan the Weak.
+```
+
+<!-- See [lore example](https://github.com/mathias/lore-example) for an example of Lore used as a history generator for a made-up game. -->
 
 ## TODO
 
