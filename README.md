@@ -37,7 +37,7 @@ I am Conan the Weak.
 
 ### Nouns and actions
 
-Nouns are simply tables (hashes) with keys and values on them, for setting up "things" that will be useful in your narrative. Here's an example of a person and a banana:
+Nouns are simply tables (hashes) with keys and values on them, for setting up "things" that will be useful in your narrative. Nouns can hold values that get updated as the narrative progresses. Here's an example of a person and a banana, as nouns:
 
 ```
 (local nouns [{:name "Ronald"
@@ -48,9 +48,9 @@ Nouns are simply tables (hashes) with keys and values on them, for setting up "t
 	       :eaten false}])
 ```
 
-Actions are a series of functions for manipulating nouns. Actions are implemented as tables that contain at least a filter function and an update function. The update function takes as parameters the action that called it and an entity that matched its filter, and can update the state of the scene and/or the entity. Any strings returned by the update function get appended to the scene's lines, which are generally used as the narrative output.
+Actions are a series of functions for manipulating nouns. Actions are implemented as tables that contain at least a filter function (called `filter-fn`) and an `update` function. The `update` function takes as parameters the action that called it and an entity that matched its filter, and can update the state of the scene and/or the entity. Any strings returned by the `update` function get appended to the scene's lines, which are generally used as the narrative output.
 
-As a shorthand, instead of specifying a filter function, you can use `filter-tags` to list which keys on the entity you want to be present to invoke the action. This saves you from writing a complex filter-fn yourself.
+As a shorthand, instead of specifying a filter function, you can use `filter-tags` to list which keys on the entity you want to be present to invoke the action. This saves you from writing the `filter-fn` yourself when tags are sufficient.
 
 For example,
 
