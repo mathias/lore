@@ -56,9 +56,18 @@ For example,
 
 ```
 (local actions [{:name "eats"
-		 :filter [:person]
+		 :filter-tags [:person]
 		 :update (fn [action e] (tset e :hungry false) (line-for action e))
 		 :grammar {"#origin#" "#name# eats."}}])
+```
+
+An action that writes its own `filter-fn` rather than using `filter-tags will look like:
+
+```
+{:name "eats"
+ :filter-fn (fn [e] (and e.hungry-percent) (> e.hungry-percent 75))
+ :update (fn [action e] (tset e :hungry-percent (- e.hungry-percent 50)) (line-for action e))
+  :grammar {"#origin#" "#name# eats a banana and is now #hungrypercent#% hungry."}
 ```
 
 The last concept needed is the scene, or the world. The scene is another table with the nouns and actions set on it, and then set up by the `prepare-scene` function, which registers some functions and checks data is consistent. Generally, once a scene has been "prepared", we call it the world.
