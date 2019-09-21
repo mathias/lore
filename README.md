@@ -61,7 +61,7 @@ For example,
 		 :grammar {"#origin#" "#name# eats."}}])
 ```
 
-An action that writes its own `filter-fn` rather than using `filter-tags will look like:
+An action that writes its own `filter-fn` rather than using `filter-tags` will look like:
 
 ```
 {:name "eats"
