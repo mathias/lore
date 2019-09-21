@@ -70,9 +70,9 @@ An action that writes its own `filter-fn` rather than using `filter-tags` will l
   :grammar {"#origin#" "#name# eats a banana and is now #hungrypercent#% hungry."}
 ```
 
-The last concept needed is the scene, or the world. The scene is another table with the nouns and actions set on it, and then set up by the `prepare-scene` function, which registers some functions and checks data is consistent. Generally, once a scene has been "prepared", we call it the world.
+The last concept needed is the scene, or the world. The scene is another table with the lists of `nouns` and `actions` set on it. It must be set up by the `prepare-scene` function, which registers some functions and checks data is consistent.
 
-To perform one round of actions, simply call the `tick` function on the world. Actions are called in the order that they are defined in the list. Repeated ticks will generate more and more lines in `world.lines`.
+To perform one round of actions, simply call the `tick` function on the scene. Actions are called in the order that they are defined in the list. Repeated ticks will generate more and more lines in `scene.lines`.
 
 <!-- See [lore example](https://github.com/mathias/lore-example) for an example of Lore used as a history generator for a made-up game. -->
 
