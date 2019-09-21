@@ -43,16 +43,18 @@
 (lambda validate-nouns [nouns] nouns)
 
 ;; Simplest one for now, more complex later:
-(lambda filter-function-for [filter-definition]
+(lambda filter-function-tags-for [filter-tags]
         (fn [e]
             (let [entity-keys (lume.keys e)]
-              (lume.all filter-definition (fn [filter-key] (table-contains entity-keys filter-key))))))
+              (lume.all filter-tags (fn [filter-key] (table-contains entity-keys filter-key))))))
 
 (lambda prepare-actions [scene]
         (each [_ action (ipairs scene.actions)]
               (tset action :scene scene)
               (tset action :nouns scene.nouns)
-              (tset action :filter-fn (filter-function-for action.filter))))
+              (when (not action.filter-fn)
+                (when action.filter-tags
+                  (tset action :filter-fn (filter-function-tags-for action.filter-tags))))))
 
 (lambda prepare-scene [scene]
         (validate-nouns scene.nouns)
@@ -82,12 +84,16 @@
           (generate-one combined-grammar)))
 
 
-(local nouns [{:name "Steve" :mass 150}])
+(local nouns [{:name "Steve" :hungry-percent 50}])
 (local actions [{
-                 :name "weigh-in"
-                 :filter [:name :mass]
-                 :update (fn [action e] (tset e :mass (+ e.mass 5)) (line-for action e))
-                 :grammar {"#origin#" "#name# who weighs #mass# pounds."}}])
+                 :name "gets-more-hungry"
+                 :filter-tags [:name :hungry-percent]
+                 :update (fn [action e] (tset e :hungry-percent (+ e.hungry-percent 2)) (line-for action e))
+                 :grammar {"#origin#" "#name# is #hungrypercent#% hungry."}}
+                {:name "eats"
+                 :filter-fn (fn [e] (and e.hungry-percent) (> e.hungry-percent 75))
+                 :update (fn [action e] (tset e :hungry-percent (- e.hungry-percent 50)) (line-for action e))
+                 :grammar {"#origin#" "#name# eats a banana and is now #hungrypercent#% hungry."}}])
 
 (local scene {:nouns nouns :actions actions})
 

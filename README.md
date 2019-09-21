@@ -34,25 +34,23 @@ I am Gunthur the Terrible.
 I am Conan the Weak.
 ```
 
-<!-- See [lore example](https://github.com/mathias/lore-example) for an example of Lore used as a history generator for a made-up game. -->
 
 ### Nouns and actions
 
 Nouns are simply tables (hashes) with keys and values on them, for setting up "things" that will be useful in your narrative. Here's an example of a person and a banana:
 
 ```
-(local nouns [{:name "Joe"
-	       :happiness 0
-	       :hungry true
+(local nouns [{:name "Ronald"
+	       :hungry-percent 50
 	       :person true}
 	      {:name "banana"
 	       :food true
 	       :eaten false}])
 ```
 
-Actions are a series of functions for manipulating nouns. Actions are implemented as tables that contain at least a filter function and an update function. The update function takes the action that called it and an entity that matched its filter, and can update the state of the scene or entity. Any strings returned by the update function get appended to the scene's lines, which are generally used as the narrative output.
+Actions are a series of functions for manipulating nouns. Actions are implemented as tables that contain at least a filter function and an update function. The update function takes as parameters the action that called it and an entity that matched its filter, and can update the state of the scene and/or the entity. Any strings returned by the update function get appended to the scene's lines, which are generally used as the narrative output.
 
-As a shorthand, instead of specifying a filter function, you can use `filter` to list which keys on the entity you want to be present to invoke the action. This saves you from writing a complex filter-fn yourself.
+As a shorthand, instead of specifying a filter function, you can use `filter-tags` to list which keys on the entity you want to be present to invoke the action. This saves you from writing a complex filter-fn yourself.
 
 For example,
 
@@ -65,7 +63,9 @@ For example,
 
 The last concept needed is the scene, or the world. The scene is another table with the nouns and actions set on it, and then set up by the `prepare-scene` function, which registers some functions and checks data is consistent. Generally, once a scene has been "prepared", we call it the world.
 
-To perform one action, simply call the `tick` function on the world. Repeated ticks will generate more and more lines in `world.lines`.
+To perform one round of actions, simply call the `tick` function on the world. Actions are called in the order that they are defined in the list. Repeated ticks will generate more and more lines in `world.lines`.
+
+<!-- See [lore example](https://github.com/mathias/lore-example) for an example of Lore used as a history generator for a made-up game. -->
 
 ## TODO
 
