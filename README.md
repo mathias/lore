@@ -17,8 +17,8 @@ Simple example in Fennel:
 (local lore (:require lore))
 
 (local grammar {"#name#" ["Hagar" "Conan" "Attila" "Gunthur" "Genghis"]
-                "#title#" ["Sad" "Terrible" "Strong" "Weak" "Feeble"]
-                "#origin#" "I am #name# the #title#."})
+	        "#title#" ["Sad" "Terrible" "Strong" "Weak" "Feeble"]
+		"#origin#" "I am #name# the #title#."})
 
 (for [i 1 5]
   (print (lore.generate-one grammar)))
@@ -38,11 +38,40 @@ I am Conan the Weak.
 
 ### Nouns and actions
 
+Nouns are simply tables (hashes) with keys and values on them, for setting up "things" that will be useful in your narrative. Here's an example of a person and a banana:
+
+```
+(local nouns [{:name "Joe"
+	       :happiness 0
+	       :hungry true
+	       :person true}
+	      {:name "banana"
+	       :food true
+	       :eaten false}])
+```
+
+Actions are a series of functions for manipulating nouns. Actions are implemented as tables that contain at least a filter function and an update function. The update function takes the action that called it and an entity that matched its filter, and can update the state of the scene or entity. Any strings returned by the update function get appended to the scene's lines, which are generally used as the narrative output.
+
+As a shorthand, instead of specifying a filter function, you can use `filter` to list which keys on the entity you want to be present to invoke the action. This saves you from writing a complex filter-fn yourself.
+
+For example,
+
+```
+(local actions [{:name "eats"
+		 :filter [:person]
+		 :update (fn [action e] (tset e :hungry false) (line-for action e))
+		 :grammar {"#origin#" "#name# eats."}}])
+```
+
+The last concept needed is the scene, or the world. The scene is another table with the nouns and actions set on it, and then set up by the `prepare-scene` function, which registers some functions and checks data is consistent. Generally, once a scene has been "prepared", we call it the world.
+
+To perform one action, simply call the `tick` function on the world. Repeated ticks will generate more and more lines in `world.lines`.
 
 ## TODO
 
 - [ ] Add an English modifiers function like [Tracey](tracery.io) has.
 - [x] Add the ability to track "objects" (nouns) and have arbitrary attributes on them, to further make sophisticated generators.
+- [ ] Write validation (data linter) functions `validate-actions` and `validate-nouns`.
 - [ ] Unit tests.
 
 ## License
