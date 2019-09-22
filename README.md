@@ -82,7 +82,7 @@ To perform one round of actions, simply call the `tick` function on the scene. A
 
 ### Putting it all together
 
-Here's a nontrivial example, ported from [Seaduck's Example 4: Rooms with Objects](https://github.com/aparrish/seaduck#examples):
+Here's a nontrivial example, ported from [Seaduck's Example 4: Rooms with Objects](https://github.com/aparrish/seaduck#examples). The source is in the `example.fnl` file.
 
 ```
 (local nouns [{:name "kitchen" :room true}
@@ -104,7 +104,7 @@ Here's a nontrivial example, ported from [Seaduck's Example 4: Rooms with Object
                                    drink (lume.first drinks-for-room)]
                                (tset person :has-drink true)
                                (tset drink :currently-in nil)
-                               (expand-template action "#origin#" {:person person.name :drink drink.name})))
+                               (lore.expand-template action "#origin#" {:person person.name :drink drink.name})))
                  :grammar {"#origin#" ["#person# took #drink#." "'Oh hey, #drink#!' said #person#, and picked it up."]}}
                 {:name "move"
                  :filter-fn (fn [e] (and e.person
@@ -114,18 +114,18 @@ Here's a nontrivial example, ported from [Seaduck's Example 4: Rooms with Object
                                    destinations (lume.filter person.scene.nouns (fn [e] (and e.room (not (= e.name currently-in)))))
                                    chosen-destination (lume.randomchoice destinations)]
                                (tset person :currently-in chosen-destination.name)
-                               (expand-template action "moveto" {:name person.name :room chosen-destination.name})))
+                               (lore.expand-template action "moveto" {:name person.name :room chosen-destination.name})))
                  :grammar {"moveto" ["After awhile, #name# went to #room#."
                                      "#name# decided to go into the #room#."]}}
                 {:name "work"
                  :filter-fn (fn [e] (and e.person (= e.currently-in "study") e.has-drink))
-                 :update (fn [action person] (expand-template action "isworking" {:name person.name}))
+                 :update (fn [action person] (lore.expand-template action "isworking" {:name person.name}))
                  :grammar {"isworking" ["#name# typed furiously on their laptop."
                                         "#name# was taking notes while reading a book from the library.",
                                         "#name# sighed as they clicked 'Send' on another e-mail."]}}
                 {:name "play video games"
                  :filter-fn (fn [e] (and e.person (= e.currently-in "living room")))
-                 :update (fn [action person] (expand-template action "playgames" {:name person.name}))
+                 :update (fn [action person] (lore.expand-template action "playgames" {:name person.name}))
                  :grammar {"{{videoGame}}" ["Destiny 2" "Splatoon 2" "Skyrim" "Zelda" "Bejeweled"]
                            "playgames" ["#name# sat down to play {{videoGame}} for a while."
                                         "#name# decided to get a few minutes of {{videoGame}} in."
@@ -136,7 +136,7 @@ Here's a nontrivial example, ported from [Seaduck's Example 4: Rooms with Object
                  :update (fn [action personA]
                              (let [persons (lume.filter personA.scene.nouns (fn [e] (and e.person e.currently-in (~= personA.name e.name) (= personA.currently-in e.currently-in))))
                                    personB (lume.first persons)]
-                               (expand-template action "talks-with" {:personA personA.name :personB personB.name})))
+                               (lore.expand-template action "talks-with" {:personA personA.name :personB personB.name})))
                  :grammar {"#topic#" ["the weather" "the garden" "the phase of the moon" "#personA#'s family" "the books they've been reading"]
                            "talks-with" ["#personA# and #personB# chatted for a bit."
                                          "#personA# asked #personB# how their day was going."
@@ -146,10 +146,10 @@ Here's a nontrivial example, ported from [Seaduck's Example 4: Rooms with Object
 
 (local scene {:nouns nouns :actions actions})
 
-(local world (prepare-scene scene))
+(local world (lore.prepare-scene scene))
 
 (for [i 1 5]
-     (tick world))
+     (lore.tick world))
 
 (each [_ line (ipairs world.lines)]
       (print line))
