@@ -95,94 +95,10 @@
 (lambda expand-template [action goal mappings]
         (generate-one (entity-merge-grammar action.grammar mappings) goal))
 
-;; (local nouns [{:name "Steve" :hungry-percent 50}
-;;               {:name "Bob" :hungry-percent 50}
-;;               {:name "Jim" :hungry-percent 50}
-;;               {:name "Kevin" :hungry-percent 50}
-;;               ])
-;; (local actions [{
-;;                  :name "gets-more-hungry"
-;;                  :filter-tags [:name :hungry-percent]
-;;                  :update (fn [action e] (tset e :hungry-percent (+ e.hungry-percent 2)) (line-for action e))
-;;                  :grammar {"#origin#" "#name# is #hungrypercent#% hungry."}}
-;;                 {:name "eats"
-;;                  :filter-fn (fn [e] (and e.hungry-percent) (> e.hungry-percent 75))
-;;                  :update (fn [action e] (tset e :hungry-percent (- e.hungry-percent 50)) (line-for action e))
-;;                  :grammar {"#origin#" "#name# eats a banana and is now #hungrypercent#% hungry."}}])
 
-(local nouns [{:name "kitchen" :room true}
-              {:name "living room" :room true}
-              {:name "study" :room true}
-              {:name "Max" :person true :has-drink false :currently-in "living room"}
-              {:name "Rory" :person true :has-drink false :currently-in "study"}
-              {:name "coffee" :drink true :currently-in "kitchen"}
-              {:name "tea" :drink true :currently-in "kitchen"}])
-
-(local actions [{:name "take"
-                 :filter-fn (fn [e]
-                              (and e.person
-                                   (not e.has-drink)
-                                   ;; ensure there is a drink in the room
-                                   (lume.any e.scene.nouns (fn [n] (and n.drink (= e.currently-in n.currently-in))))))
-                 :update (fn [action person]
-                             (let [drinks-for-room (lume.filter person.scene.nouns (fn [n] (and n.drink (= person.currently-in n.currently-in))))
-                                   drink (lume.first drinks-for-room)]
-                               (tset person :has-drink true)
-                               (tset drink :currently-in nil)
-                               (expand-template action "#origin#" {:person person.name :drink drink.name})))
-                 :grammar {"#origin#" ["#person# took #drink#." "'Oh hey, #drink#!' said #person#, and picked it up."]}}
-                {:name "move"
-                 :filter-fn (fn [e] (and e.person
-                                         e.currently-in))
-                 :update (fn [action person]
-                             (let [currently-in person.currently-in
-                                   destinations (lume.filter person.scene.nouns (fn [e] (and e.room (not (= e.name currently-in)))))
-                                   chosen-destination (lume.randomchoice destinations)]
-                               (tset person :currently-in chosen-destination.name)
-                               (expand-template action "moveto" {:name person.name :room chosen-destination.name})))
-                 :grammar {"moveto" ["After awhile, #name# went to #room#."
-                                     "#name# decided to go into the #room#."]}}
-                {:name "work"
-                 :filter-fn (fn [e] (and e.person (= e.currently-in "study") e.has-drink))
-                 :update (fn [action person] (expand-template action "isworking" {:name person.name}))
-                 :grammar {"isworking" ["#name# typed furiously on their laptop."
-                                        "#name# was taking notes while reading a book from the library.",
-                                        "#name# sighed as they clicked 'Send' on another e-mail."]}}
-                {:name "play video games"
-                 :filter-fn (fn [e] (and e.person (= e.currently-in "living room")))
-                 :update (fn [action person] (expand-template action "playgames" {:name person.name}))
-                 :grammar {"{{videoGame}}" ["Destiny 2" "Splatoon 2" "Skyrim" "Zelda" "Bejeweled"]
-                           "playgames" ["#name# sat down to play {{videoGame}} for a while."
-                                        "#name# decided to get a few minutes of {{videoGame}} in."
-                                        "#name# turned on the video game console. 'Ugh I love {{videoGame}} so much,' said #name#."]}}
-                {:name "talks with"
-                 :filter-fn (fn [e] (and e.person e.currently-in
-                                         (lume.any e.scene.nouns (fn [b] (and b.person b.currently-in (= e.currently-in b.currently-in) (~= e.name b.name))))))
-                 :update (fn [action personA]
-                             (let [persons (lume.filter personA.scene.nouns (fn [e] (and e.person e.currently-in (~= personA.name e.name) (= personA.currently-in e.currently-in))))
-                                   personB (lume.first persons)]
-                               (expand-template action "talks-with" {:personA personA.name :personB personB.name})))
-                 :grammar {"#topic#" ["the weather" "the garden" "the phase of the moon" "#personA#'s family" "the books they've been reading"]
-                           "talks-with" ["#personA# and #personB# chatted for a bit."
-                                         "#personA# asked #personB# how their day was going."
-                                         "#personB# told #personA# about a dream they had last night."
-                                         "#personA# and #personB# talked for a bit about #topic#."]}}])
-
-
-(local scene {:nouns nouns :actions actions})
-
-(local world (prepare-scene scene))
-
-(for [i 1 5]
-     (tick world))
-
-(each [_ line (ipairs world.lines)]
-      (print line))
-
-(print "The end.")
-
-; Exports
+;; Exports
 {:randomseed randomseed
  :generate-one generate-one
  :tick tick
- :prepare-scene prepare-scene}
+ :prepare-scene prepare-scene
+ :expand-template expand-template}
