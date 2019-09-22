@@ -13,7 +13,7 @@ Lore is written in Fennel and can be used in Lua projects as well. To use in a L
 
 Simple example in Fennel:
 
-```
+```scheme
 (local lore (:require lore))
 
 (local grammar {"#name#" ["Hagar" "Conan" "Attila" "Gunthur" "Genghis"]
@@ -39,7 +39,7 @@ I am Conan the Weak.
 
 Nouns are simply tables (hashes) with keys and values on them, for setting up "things" that will be useful in your narrative. Nouns can hold values that get updated as the narrative progresses. Here's an example of a person and a banana, as nouns:
 
-```
+```scheme
 (local nouns [{:name "Ronald"
 	       :hungry-percent 50
 	       :person true}
@@ -56,21 +56,21 @@ As a shorthand, instead of specifying a filter function, you can use `filter-tag
 
 For example,
 
-```
+```scheme
 (local actions [{:name "eats"
 		 :filter-tags [:person]
 		 :update (fn [action e]
 		           (tset e :hungry false)
-			   (expand-template action "#origin# {:name e.name}))
+			   (lore.expand-template action "#origin# {:name e.name}))
 		 :grammar {"#origin#" "#name# eats."}}])
 ```
 
 An action that writes its own `filter-fn` rather than using `filter-tags` will look like:
 
-```
+```scheme
 {:name "eats"
  :filter-fn (fn [e] (and e.hungry-percent) (> e.hungry-percent 75))
- :update (fn [action e] (tset e :hungry-percent (- e.hungry-percent 50)) (expand-template action "#origin#" {:name e.name :hungrypercent e.hungry-percent}))
+ :update (fn [action e] (tset e :hungry-percent (- e.hungry-percent 50)) (lore.expand-template action "#origin#" {:name e.name :hungrypercent e.hungry-percent}))
   :grammar {"#origin#" "#name# eats a banana and is now #hungrypercent#% hungry."}
 ```
 
@@ -84,7 +84,7 @@ To perform one round of actions, simply call the `tick` function on the scene. A
 
 Here's a nontrivial example, ported from [Seaduck's Example 4: Rooms with Objects](https://github.com/aparrish/seaduck#examples). The source is in the `example.fnl` file.
 
-```
+```scheme
 (local nouns [{:name "kitchen" :room true}
               {:name "living room" :room true}
               {:name "study" :room true}
