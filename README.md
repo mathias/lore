@@ -34,6 +34,9 @@ I am Gunthur the Terrible.
 I am Conan the Weak.
 ```
 
+The expansion rules for placeholders are fairly simple, but can generate complex output. Each key can hold a single string or an array of strings. (lore will randomly pick a string from the list.) To match Tracery, tokens to be replaced in the strings are typically surrounded by hash symbols, like `#title#` above. However, other substitution shapes should work, like C templates-style curly braces, like `{{title}}`. The grammar is itself just a table that contains substitution values and will expand as many times as necessary until all tokens are replaced.
+
+The default of the `generate-one` function is to try output the `#origin#` key, however, you can ask for other keys by providing it a third parameter. `(lore.generate grammar "#name#")` will output a name from the above grammar.
 
 ### Nouns and actions
 
