@@ -71,7 +71,7 @@ An action that writes its own `filter-fn` rather than using `filter-tags` will l
 {:name "eats"
  :filter-fn (fn [e] (and e.hungry-percent) (> e.hungry-percent 75))
  :update (fn [action e] (tset e :hungry-percent (- e.hungry-percent 50)) (lore.expand-template action "#origin#" {:name e.name :hungrypercent e.hungry-percent}))
-  :grammar {"#origin#" "#name# eats a banana and is now #hungrypercent#% hungry."}
+ :grammar {"#origin#" "#name# eats a banana and is now #hungrypercent#% hungry."}
 ```
 
 The last concept needed is the scene, or the world. The scene is another table with the lists of `nouns` and `actions` set on it. It must be set up by the `prepare-scene` function, which registers some functions and checks data is consistent.
@@ -184,16 +184,16 @@ The end.
 
 ## TODO
 
-- [ ] Add an English modifiers function like [Tracey](tracery.io) has.
+- [ ] Add an English modifiers function like [Tracery](tracery.io) has.
 - [x] Add the ability to track "objects" (nouns) and have arbitrary attributes on them, to further make sophisticated generators.
 - [ ] Write validation (data linter) functions `validate-actions` and `validate-nouns`.
 - [ ] Unit tests.
 - Future functionality ideas:
   - [ ] Actions that can require two or more entities in the world to be in a certain state, and then pass those matched entities to the update fn.
   - [ ] Don't always trigger all actions that can possibly match -- either actions have a percentage likelihood of happening, or they match only one noun randomly each round, but not all nouns.
-  - [ ] Keep track of the number of tickets on `scene` even if they aren't used by any functions now -- other things could use it, including a goal function.
-  - [ ] Allow one action to call another from inside the update function. Not sure whether this would still require teh filter-fn to be true or would bypass filter-fn.
-  - [ ] Relations between nouns -- `"Matt" :belongs_to "FactionName"` and so on. Relations could then be used for more complex filters or actions.
+  - [ ] Keep track of the number of "ticks" on `scene` even if they aren't used by any functions now -- other things could use it, including a goal function.
+  - [ ] Allow one action to call another from inside the update function. Not sure whether this would still require the filter-fn to be true or would bypass filter-fn.
+  - [ ] Relations between nouns -- `"Matt" :belongs_to "FactionName"` and so on. Relations would allow more complex filters or actions.
   - [ ] A goal state function which ends the scene when reached.
   - [ ] Constraint solver type functionality to help find a set of actions that leads to the goal state.
 
