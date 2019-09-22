@@ -13,7 +13,7 @@ Lore is written in Fennel and can be used in Lua projects as well. To use in a L
 
 Simple example in Fennel:
 
-```scheme
+```clojure
 (local lore (:require lore))
 
 (local grammar {"#name#" ["Hagar" "Conan" "Attila" "Gunthur" "Genghis"]
@@ -39,7 +39,7 @@ I am Conan the Weak.
 
 Nouns are simply tables (hashes) with keys and values on them, for setting up "things" that will be useful in your narrative. Nouns can hold values that get updated as the narrative progresses. Here's an example of a person and a banana, as nouns:
 
-```scheme
+```clojure
 (local nouns [{:name "Ronald"
 	       :hungry-percent 50
 	       :person true}
@@ -56,7 +56,7 @@ As a shorthand, instead of specifying a filter function, you can use `filter-tag
 
 For example,
 
-```scheme
+```clojure
 (local actions [{:name "eats"
 		 :filter-tags [:person]
 		 :update (fn [action e]
@@ -67,7 +67,7 @@ For example,
 
 An action that writes its own `filter-fn` rather than using `filter-tags` will look like:
 
-```scheme
+```clojure
 {:name "eats"
  :filter-fn (fn [e] (and e.hungry-percent) (> e.hungry-percent 75))
  :update (fn [action e] (tset e :hungry-percent (- e.hungry-percent 50)) (lore.expand-template action "#origin#" {:name e.name :hungrypercent e.hungry-percent}))
@@ -84,7 +84,7 @@ To perform one round of actions, simply call the `tick` function on the scene. A
 
 Here's a nontrivial example, ported from [Seaduck's Example 4: Rooms with Objects](https://github.com/aparrish/seaduck#examples). The source is in the `example.fnl` file.
 
-```scheme
+```clojure
 (local nouns [{:name "kitchen" :room true}
               {:name "living room" :room true}
               {:name "study" :room true}
