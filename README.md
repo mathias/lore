@@ -36,7 +36,7 @@ I am Conan the Weak.
 
 ## TODO
 
-- [ ] Add an English modifiers function like [Tracey](tracery.io) has.
+- [ ] Add an English modifiers function like [Tracery](tracery.io) has.
 - [ ] Add the ability to track "objects" and have arbitrary attributes on them, to further make sophisticated generators.
 - [ ] Unit tests.
 
