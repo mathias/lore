@@ -188,6 +188,7 @@ The end.
 ## TODO
 
 - [ ] Add an English modifiers function like [Tracery](tracery.io) has.
+
 - [x] Add the ability to track "objects" (nouns) and have arbitrary attributes on them, to further make sophisticated generators.
 - [ ] Write validation (data linter) functions `validate-actions` and `validate-nouns`.
 - [ ] Unit tests.
