@@ -1,7 +1,7 @@
 (local lume (require :lume))
 
 ;; for dev
-(local view (require :fennelview))
+(local view (require "fennel.view"))
 (local pp (fn [x] (print (view x))))
 
 ;; Setting up random seed
