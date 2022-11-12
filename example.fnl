@@ -37,7 +37,7 @@
                  :filter-fn (fn [e] (and e.person (= e.currently-in "study") e.has-drink))
                  :update (fn [action person] (lore.expand-template action "isworking" {:name person.name}))
                  :grammar {"isworking" ["#name# typed furiously on their laptop."
-                                        "#name# was taking notes while reading a book from the library.",
+                                        "#name# was taking notes while reading a book from the library."
                                         "#name# sighed as they clicked 'Send' on another e-mail."]}}
                 {:name "play video games"
                  :filter-fn (fn [e] (and e.person (= e.currently-in "living room")))
